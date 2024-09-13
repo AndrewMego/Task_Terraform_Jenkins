@@ -43,7 +43,7 @@ pipeline {
                 script {
                     def publicIp = sh(script: "terraform output -raw ec2_public_ip", returnStdout: true).trim()
                     sshagent(['YOUR_SSH_CREDENTIALS_ID']) {
-                        sh "scp -o StrictHostKeyChecking=no -i /path/to/your-key.pem path/to/your/php/index.php ubuntu@${publicIp}:/var/www/html/index.php"
+                        sh "scp -o StrictHostKeyChecking=no -i ~/Key_Andrew.pem path/to/your/php/index.php ubuntu@${publicIp}:/var/www/html/index.php"
                     }
                 }
             }
