@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the repository containing Terraform code
-                git branch: 'main', url: 'https://github.com/your-repo/terraform-aws' // Update with your repo URL
+                git branch: 'main', url: 'https://github.com/AndrewMego/Task_Terraform_Jenkins.git' // Update with your repo URL
             }
         }
 
