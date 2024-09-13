@@ -42,8 +42,8 @@ pipeline {
                 // Use SSH or a deployment script to deploy PHP application on the EC2 instance
                 script {
                     def publicIp = sh(script: "terraform output -raw ec2_public_ip", returnStdout: true).trim()
-                    sshagent(['YOUR_SSH_CREDENTIALS_ID']) {
-                        sh "scp -o StrictHostKeyChecking=no -i ~/Key_Andrew.pem path/to/your/php/index.php ubuntu@${publicIp}:/var/www/html/index.php"
+                    sshagent(['AWS_ACCESS_KEY_ID']) {
+                        sh "scp -o StrictHostKeyChecking=no -i ~/Key_Andrew.pem /php/index.php ubuntu@${publicIp}:/var/www/html/index.php"
                     }
                 }
             }
