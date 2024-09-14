@@ -1,6 +1,44 @@
 pipeline {
-    agent any
-
+ agent {
+        label 'your-node-label'  // Specify your Jenkins node label here
+    }
+    environment {
+        TF_VAR_AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        TF_VAR_AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/AndrewMego/Task_Terraform_Jenkins.git',
+                    ]]
+                ])
+            }
+        }
+        stage('Terraform Init & Apply') {
+            steps {
+                script {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_ACCESS_KEY_AA']]) {
+                        sh '''
+                            terraform init
+                            terraform apply -auto-approve
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Deployment completed.'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
     environment {
         // Set AWS credentials
         AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
