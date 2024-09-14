@@ -21,7 +21,7 @@ pipeline {
         stage('Terraform Init & Apply') {
             steps {
                 script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'AWS_ACCESS_KEY_AA']]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
                         sh '''
                             terraform init
                             terraform apply -auto-approve
@@ -78,7 +78,7 @@ pipeline {
                 // Use SSH or a deployment script to deploy PHP application on the EC2 instance
                 script {
                     def publicIp = sh(script: "terraform output -raw ec2_public_ip", returnStdout: true).trim()
-                    sshagent(['AWS_ACCESS_KEY_AA']) {
+                    sshagent(['aws-credentials']) {
                         sh "scp -o StrictHostKeyChecking=no -i ~/Key_Andrew.pem /php/index.php ubuntu@${publicIp}:/var/www/html/index.php"
                     }
                 }
